@@ -1,3 +1,10 @@
+
+import gnu.io.CommPortIdentifier;
+import gnu.io.SerialPort;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -13,10 +20,69 @@ public class LB_Frame extends javax.swing.JFrame {
     /**
      * Creates new form LB_Frame
      */
+    
+    private static final String TURN_ON_RED = "0";
+    private static final String TURN_OFF_RED = "1";
+    private static final String TURN_ON_GREEN = "2";
+    private static final String TURN_OFF_GREEN = "3";
+    
+    /*
+     * Variables para la conexión
+     */
+    private OutputStream output = null;
+    SerialPort serial;
+    private final String port = "/dev/ttyACM0"; //puerto de conexion del arduino
+    private final int TIMEOUT = 2000; //milisegundos
+    private final int DATA_RATE = 9600;
+    
     public LB_Frame() {
         initComponents();
+        inicializarConexion();
     }
 
+    public void inicializarConexion() {
+        CommPortIdentifier puertoID = null;
+        Enumeration puertoEnum = CommPortIdentifier.getPortIdentifiers();
+        
+        while(puertoEnum.hasMoreElements()) {
+            CommPortIdentifier actualPuertoID = (CommPortIdentifier) puertoEnum.nextElement();
+            String valor = actualPuertoID.getName();
+            if(port.equals(actualPuertoID.getName())) {
+                puertoID = actualPuertoID;
+                break;
+            }
+        }
+        
+        if(puertoID == null) {
+            mostrarError("No se puede conectar al puerto");
+            System.exit(ERROR);
+        }
+        
+        try{
+            serial = (SerialPort) puertoID.open(this.getClass().getName(), TIMEOUT);
+            //parametros puerto serial
+            serial.setSerialPortParams(DATA_RATE, serial.DATABITS_8, serial.STOPBITS_1, serial.PARITY_NONE);
+            
+            output = serial.getOutputStream();
+        } catch(Exception e) {
+            mostrarError(e.getMessage());
+            System.exit(ERROR);
+        }
+    }
+    
+    private void enviarDatos(String datos) {
+        try{
+            output.write(datos.getBytes());
+        } catch(Exception e) {
+            mostrarError(e.getMessage());
+            System.exit(ERROR);
+        }
+    }
+    
+    public void mostrarError(String msj) {
+        JOptionPane.showMessageDialog(this, msj, "ERROR", JOptionPane.ERROR_MESSAGE);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,8 +96,6 @@ public class LB_Frame extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(47, 32, 32));
@@ -45,10 +109,6 @@ public class LB_Frame extends javax.swing.JFrame {
         jRadioButton1.setText("Led Rojo");
 
         jRadioButton2.setText("Led Verde");
-
-        jRadioButton3.setText("Led Azul");
-
-        jRadioButton4.setText("Led Blanco");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -65,13 +125,7 @@ public class LB_Frame extends javax.swing.JFrame {
                         .addGap(25, 25, 25)
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jRadioButton4))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jRadioButton3)))
+                        .addComponent(jButton2)))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -81,11 +135,7 @@ public class LB_Frame extends javax.swing.JFrame {
                 .addComponent(jRadioButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButton2)
-                .addGap(12, 12, 12)
-                .addComponent(jRadioButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jRadioButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -135,7 +185,5 @@ public class LB_Frame extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
     // End of variables declaration//GEN-END:variables
 }

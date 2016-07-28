@@ -11,13 +11,15 @@ void setup() {
 }
 
 void loop() {
-  if(Serial.available() == 0) {
+  if(Serial.available() > 0) {
     lect = Serial.read();
     if(lect == '0')
       digitalWrite(red, HIGH);
     else if(lect == '1')
+      digitalWrite(red, LOW);
+    else if(lect == '2')
       digitalWrite(green, HIGH);
+    else if(lect == '3')
+      digitalWrite(green, LOW);
   }
-  digitalWrite(red, LOW);
-  digitalWrite(green, LOW);
 }
