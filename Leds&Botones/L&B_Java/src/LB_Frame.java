@@ -36,6 +36,11 @@ public class LB_Frame extends javax.swing.JFrame {
      */
     private OutputStream output = null;
     SerialPort serial;
+    /*
+     * Ejecutar la siguiente instrucción en la terminal si estas utilizando Ubuntu
+     * ln -s /dev/ttyACM0 /dev/ttyS0
+     * Si no, cambiar el puerto al que se ha conectado el arduino
+     */
     private final String PORT = "/dev/ttyS0"; //puerto de conexion del arduino
     private final int TIMEOUT = 2000; //milisegundos
     private final int DATA_RATE = 9600;
