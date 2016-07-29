@@ -3,6 +3,7 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /*
@@ -25,19 +26,30 @@ public class LB_Frame extends javax.swing.JFrame {
     private static final String TURN_OFF_RED = "1";
     private static final String TURN_ON_GREEN = "2";
     private static final String TURN_OFF_GREEN = "3";
+    private static final String TURN_ON_BLUE = "4";
+    private static final String TURN_OFF_BLUE = "5";
+    private static final String TURN_ON_WHITE = "6";
+    private static final String TURN_OFF_WHITE = "7";
     
     /*
      * Variables para la conexión
      */
     private OutputStream output = null;
     SerialPort serial;
-    private final String port = "/dev/ttyACM0"; //puerto de conexion del arduino
+    private final String PORT = "/dev/ttyS0"; //puerto de conexion del arduino
     private final int TIMEOUT = 2000; //milisegundos
     private final int DATA_RATE = 9600;
     
     public LB_Frame() {
         initComponents();
         inicializarConexion();
+        setTitle("L&B JavaDuino");
+        //jRadioButton3.setSelected(true);
+        jLabel1.setIcon(new ImageIcon("src/img/redoff.png"));
+        jLabel2.setIcon(new ImageIcon("src/img/greenoff.png"));
+        jLabel3.setIcon(new ImageIcon("src/img/blueoff.png"));
+        jLabel4.setIcon(new ImageIcon("src/img/whiteoff.png"));
+        jLabel5.setIcon(new ImageIcon("src/img/logo.png"));
     }
 
     public void inicializarConexion() {
@@ -47,7 +59,7 @@ public class LB_Frame extends javax.swing.JFrame {
         while(puertoEnum.hasMoreElements()) {
             CommPortIdentifier actualPuertoID = (CommPortIdentifier) puertoEnum.nextElement();
             String valor = actualPuertoID.getName();
-            if(port.equals(actualPuertoID.getName())) {
+            if(PORT.equals(actualPuertoID.getName())) {
                 puertoID = actualPuertoID;
                 break;
             }
@@ -94,56 +106,171 @@ public class LB_Frame extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
+        jRadioButton5 = new javax.swing.JRadioButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(47, 32, 32));
 
         jButton1.setFont(new java.awt.Font("Padauk", 1, 15)); // NOI18N
-        jButton1.setText("ON");
+        jButton1.setText("ENCENDER");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Padauk", 1, 15)); // NOI18N
-        jButton2.setText("OFF");
-
-        jRadioButton1.setText("Led Rojo");
+        jButton2.setText("APAGAR");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jRadioButton2.setText("Led Verde");
+
+        jLabel1.setText("jLabel1");
+        jLabel1.setMaximumSize(new java.awt.Dimension(50, 50));
+        jLabel1.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel1.setPreferredSize(new java.awt.Dimension(50, 50));
+
+        jLabel2.setText("jLabel2");
+        jLabel2.setMaximumSize(new java.awt.Dimension(50, 50));
+        jLabel2.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel2.setPreferredSize(new java.awt.Dimension(50, 50));
+
+        jLabel3.setText("jLabel3");
+        jLabel3.setMaximumSize(new java.awt.Dimension(50, 50));
+        jLabel3.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel3.setPreferredSize(new java.awt.Dimension(50, 50));
+
+        jLabel4.setText("jLabel4");
+        jLabel4.setMaximumSize(new java.awt.Dimension(50, 50));
+        jLabel4.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel4.setPreferredSize(new java.awt.Dimension(50, 50));
+
+        jRadioButton3.setText("Led Rojo");
+
+        jRadioButton4.setText("Led Azul");
+
+        jRadioButton5.setText("Led Blanco");
+
+        jLabel5.setText("jLabel5");
+        jLabel5.setMaximumSize(new java.awt.Dimension(105, 97));
+        jLabel5.setMinimumSize(new java.awt.Dimension(105, 97));
+        jLabel5.setPreferredSize(new java.awt.Dimension(105, 97));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jRadioButton1)
-                            .addComponent(jRadioButton2)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jRadioButton3)
+                                .addGap(19, 19, 19))
+                            .addComponent(jRadioButton2)
+                            .addComponent(jRadioButton4)
+                            .addComponent(jRadioButton5))
+                        .addGap(48, 48, 48)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jRadioButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jRadioButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jRadioButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addGap(25, 25, 25))
+                .addGap(24, 24, 24))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        if(jRadioButton3.isSelected()) {
+            enviarDatos(TURN_ON_RED);
+            jLabel1.setIcon(new ImageIcon("src/img/redon.png"));
+        }
+        if(jRadioButton2.isSelected()) {
+            enviarDatos(TURN_ON_GREEN);
+            jLabel2.setIcon(new ImageIcon("src/img/greenon.png"));
+        }
+        if(jRadioButton4.isSelected()) {
+            enviarDatos(TURN_ON_BLUE);
+            jLabel3.setIcon(new ImageIcon("src/img/blueon.png"));
+        }
+        if(jRadioButton5.isSelected()) {
+            enviarDatos(TURN_ON_WHITE);
+            jLabel4.setIcon(new ImageIcon("src/img/whiteon.png"));
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        if(jRadioButton3.isSelected()) {
+            enviarDatos(TURN_OFF_RED);
+            jLabel1.setIcon(new ImageIcon("src/img/redoff.png"));
+        }
+        if(jRadioButton2.isSelected()) {
+            enviarDatos(TURN_OFF_GREEN);
+            jLabel2.setIcon(new ImageIcon("src/img/greenoff.png"));
+        }
+        if(jRadioButton4.isSelected()) {
+            enviarDatos(TURN_OFF_BLUE);
+            jLabel3.setIcon(new ImageIcon("src/img/blueoff.png"));
+        }
+        if(jRadioButton5.isSelected()) {
+            enviarDatos(TURN_OFF_WHITE);
+            jLabel4.setIcon(new ImageIcon("src/img/whiteoff.png"));
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -183,7 +310,14 @@ public class LB_Frame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JRadioButton jRadioButton5;
     // End of variables declaration//GEN-END:variables
 }
