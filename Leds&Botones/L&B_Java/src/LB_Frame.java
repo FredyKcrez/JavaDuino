@@ -49,12 +49,8 @@ public class LB_Frame extends javax.swing.JFrame {
         initComponents();
         inicializarConexion();
         setTitle("L&B JavaDuino");
+        //setIconImage(new ImageIcon(getClass().getResource("src/img/logo.png")).getImage());
         //jRadioButton3.setSelected(true);
-        jLabel1.setIcon(new ImageIcon("src/img/redoff.png"));
-        jLabel2.setIcon(new ImageIcon("src/img/greenoff.png"));
-        jLabel3.setIcon(new ImageIcon("src/img/blueoff.png"));
-        jLabel4.setIcon(new ImageIcon("src/img/whiteoff.png"));
-        jLabel5.setIcon(new ImageIcon("src/img/logo.png"));
     }
 
     public void inicializarConexion() {
@@ -123,6 +119,8 @@ public class LB_Frame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(47, 32, 32));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setResizable(false);
 
         jButton1.setFont(new java.awt.Font("Padauk", 1, 15)); // NOI18N
         jButton1.setText("ENCENDER");
@@ -142,21 +140,25 @@ public class LB_Frame extends javax.swing.JFrame {
 
         jRadioButton2.setText("Led Verde");
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/redoff.png"))); // NOI18N
         jLabel1.setText("jLabel1");
         jLabel1.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel1.setMinimumSize(new java.awt.Dimension(50, 50));
         jLabel1.setPreferredSize(new java.awt.Dimension(50, 50));
 
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/greenoff.png"))); // NOI18N
         jLabel2.setText("jLabel2");
         jLabel2.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel2.setMinimumSize(new java.awt.Dimension(50, 50));
         jLabel2.setPreferredSize(new java.awt.Dimension(50, 50));
 
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/blueoff.png"))); // NOI18N
         jLabel3.setText("jLabel3");
         jLabel3.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel3.setMinimumSize(new java.awt.Dimension(50, 50));
         jLabel3.setPreferredSize(new java.awt.Dimension(50, 50));
 
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/whiteoff.png"))); // NOI18N
         jLabel4.setText("jLabel4");
         jLabel4.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel4.setMinimumSize(new java.awt.Dimension(50, 50));
@@ -168,6 +170,7 @@ public class LB_Frame extends javax.swing.JFrame {
 
         jRadioButton5.setText("Led Blanco");
 
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo.png"))); // NOI18N
         jLabel5.setText("jLabel5");
         jLabel5.setMaximumSize(new java.awt.Dimension(105, 97));
         jLabel5.setMinimumSize(new java.awt.Dimension(105, 97));
@@ -195,9 +198,7 @@ public class LB_Frame extends javax.swing.JFrame {
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jRadioButton3)
-                                .addGap(19, 19, 19))
+                            .addComponent(jRadioButton3)
                             .addComponent(jRadioButton2)
                             .addComponent(jRadioButton4)
                             .addComponent(jRadioButton5))
@@ -241,19 +242,19 @@ public class LB_Frame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(jRadioButton3.isSelected()) {
             enviarDatos(TURN_ON_RED);
-            jLabel1.setIcon(new ImageIcon("src/img/redon.png"));
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/redon.png")));
         }
         if(jRadioButton2.isSelected()) {
             enviarDatos(TURN_ON_GREEN);
-            jLabel2.setIcon(new ImageIcon("src/img/greenon.png"));
+            jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/greenon.png")));
         }
         if(jRadioButton4.isSelected()) {
             enviarDatos(TURN_ON_BLUE);
-            jLabel3.setIcon(new ImageIcon("src/img/blueon.png"));
+            jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/blueon.png")));
         }
         if(jRadioButton5.isSelected()) {
             enviarDatos(TURN_ON_WHITE);
-            jLabel4.setIcon(new ImageIcon("src/img/whiteon.png"));
+            jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/whiteon.png")));
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -261,19 +262,19 @@ public class LB_Frame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(jRadioButton3.isSelected()) {
             enviarDatos(TURN_OFF_RED);
-            jLabel1.setIcon(new ImageIcon("src/img/redoff.png"));
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/redoff.png")));
         }
         if(jRadioButton2.isSelected()) {
             enviarDatos(TURN_OFF_GREEN);
-            jLabel2.setIcon(new ImageIcon("src/img/greenoff.png"));
+            jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/greenoff.png")));
         }
         if(jRadioButton4.isSelected()) {
             enviarDatos(TURN_OFF_BLUE);
-            jLabel3.setIcon(new ImageIcon("src/img/blueoff.png"));
+            jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/blueoff.png")));
         }
         if(jRadioButton5.isSelected()) {
             enviarDatos(TURN_OFF_WHITE);
-            jLabel4.setIcon(new ImageIcon("src/img/whiteoff.png"));
+            jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/whiteoff.png")));
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
