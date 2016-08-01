@@ -1,3 +1,16 @@
+/*********************************************************************
+* Creado por: Fredy A. Cáceres Ramos
+* Fecha de creación de Sketch: 27/Julio/2016
+* Última modificación del Sketch: 29/Julio/2016
+* Practica #1
+*********************************************************************/
+
+/*
+ * Referencias 
+ * https://geekytheory.com/tutorial-java-arduino-javaduino/
+ * http://digitalyquetal.blogspot.com/2013/08/puerto-serial-arduino-en-linux.html
+ */
+
 const int red = 13;
 const int green = 12;
 const int blue = 11;
