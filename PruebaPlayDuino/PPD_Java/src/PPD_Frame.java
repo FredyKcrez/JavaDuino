@@ -1,18 +1,20 @@
 
+import entidades.ImageTransform;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.geom.Line2D;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /*
@@ -111,23 +113,73 @@ public final class PPD_Frame extends javax.swing.JFrame implements SerialPortEve
         }
     }
     
-    private void RecibirDatos() throws IOException {
+    /*private void RecibirDatos() throws IOException {
         int Output = input.read();
         String salida = String.valueOf(Output);
         jLabel6.setText("Adios");
-    }
+    }*/
     
     private void enviarDatos(String datos) {
         try{
             output.write(datos.getBytes());
-        } catch(Exception e) {
+        } catch(IOException e) {
             mostrarError(e.getMessage());
             System.exit(ERROR);
         }
     }
     
+    private void numerosSegmentos(String valor) {
+        switch(valor.length()) {
+            case 3:
+                jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/" + valor.charAt(2) + ".png")));
+                jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/" + valor.charAt(1) + ".png")));
+                jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/" + valor.charAt(0) + ".png")));
+                break;
+            case 2:
+                jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/" + valor.charAt(1) + ".png")));
+                jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/" + valor.charAt(0) + ".png")));
+                jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/0.png")));
+                break;
+            case 1:
+                jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/" + valor.charAt(0) + ".png")));
+                jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/0.png")));
+                jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/0.png")));
+                break;
+        }
+    }
+    
+    private void velocimetro(String s) throws IOException {
+        BufferedImage img = loadJPGImage("src/img/aguja.png");
+        BufferedImage dst = rotacionImagen(img, 30);
+        saveJPGImage(dst);
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/aguja.png")));
+    }
+    
+    private static void saveJPGImage(BufferedImage im) throws IOException {
+        ImageIO.write(im, "PNG", new File("src/img/aguja.png"));
+    }
+    
     public void mostrarError(String msj) {
         JOptionPane.showMessageDialog(this, msj, "ERROR", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public static BufferedImage rotacionImagen(BufferedImage origen, double grados) {
+        BufferedImage destinationImage;
+        ImageTransform imTransform = new ImageTransform(origen.getHeight(), origen.getWidth());
+        imTransform.rotate(grados);
+        imTransform.findTranslation();
+        AffineTransformOp ato = new AffineTransformOp(imTransform.getTransform(), AffineTransformOp.TYPE_BILINEAR);
+        destinationImage = ato.createCompatibleDestImage(origen, origen.getColorModel());
+        return ato.filter(origen, destinationImage);
+    }
+
+    private static BufferedImage loadJPGImage(String ruta) throws IOException {
+        BufferedImage imagen = ImageIO.read(new File(ruta));
+
+        BufferedImage source = new BufferedImage(imagen.getWidth(),
+                imagen.getHeight(), BufferedImage.TYPE_INT_RGB);
+        source.getGraphics().drawImage(imagen, 0, 0, null);
+        return source;
     }
     
     /**
@@ -152,6 +204,14 @@ public final class PPD_Frame extends javax.swing.JFrame implements SerialPortEve
         jRadioButton2 = new javax.swing.JRadioButton();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -160,9 +220,10 @@ public final class PPD_Frame extends javax.swing.JFrame implements SerialPortEve
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setMinimumSize(new java.awt.Dimension(676, 497));
         setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Leds"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Leds", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(229, 83, 83)));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/greenoff.png"))); // NOI18N
         jLabel2.setText("jLabel2");
@@ -264,33 +325,109 @@ public final class PPD_Frame extends javax.swing.JFrame implements SerialPortEve
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
                 .addContainerGap())
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Potenciometros"));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Potenciometros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(229, 83, 83)));
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pot. A3", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.TOP, null, new java.awt.Color(85, 152, 17)));
+
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/0.png"))); // NOI18N
+
+        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/0.png"))); // NOI18N
+
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/num/0.png"))); // NOI18N
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel14)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel14))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pot. A4", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.TOP, null, new java.awt.Color(85, 152, 17)));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 124, Short.MAX_VALUE)
+        );
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pot. A5", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.TOP, null, new java.awt.Color(85, 152, 17)));
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/aguja.png"))); // NOI18N
+        jLabel12.setToolTipText("");
+        jLabel12.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLabel12.setDebugGraphicsOptions(javax.swing.DebugGraphics.BUFFERED_OPTION);
+        jLabel12.setDoubleBuffered(true);
+        jLabel12.setFocusable(false);
+        jLabel12.setMaximumSize(new java.awt.Dimension(100, 30));
+        jLabel12.setMinimumSize(new java.awt.Dimension(100, 30));
+        jPanel6.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, 100, -1));
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/lbpot5.png"))); // NOI18N
+        jLabel10.setText("jLabel10");
+        jLabel10.setMaximumSize(new java.awt.Dimension(280, 142));
+        jLabel10.setMinimumSize(new java.awt.Dimension(280, 142));
+        jLabel10.setPreferredSize(new java.awt.Dimension(280, 142));
+        jPanel6.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 17, 280, -1));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 489, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Botones"));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Botones", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(229, 83, 83)));
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/btoff.png"))); // NOI18N
         jLabel6.setText("jLabel6");
@@ -321,7 +458,7 @@ public final class PPD_Frame extends javax.swing.JFrame implements SerialPortEve
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(51, 51, 51)
+                .addContainerGap()
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,18 +472,14 @@ public final class PPD_Frame extends javax.swing.JFrame implements SerialPortEve
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(61, 61, 61)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(46, 46, 46)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(49, 49, 49)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -360,19 +493,19 @@ public final class PPD_Frame extends javax.swing.JFrame implements SerialPortEve
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(17, 17, 17)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20))
         );
 
         pack();
@@ -457,6 +590,11 @@ public final class PPD_Frame extends javax.swing.JFrame implements SerialPortEve
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -468,6 +606,9 @@ public final class PPD_Frame extends javax.swing.JFrame implements SerialPortEve
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
@@ -485,37 +626,25 @@ public final class PPD_Frame extends javax.swing.JFrame implements SerialPortEve
                     for(String valor : arreInLine){
                         switch(Bandera) {
                             case 0:
-                                System.out.println(valor);
+                                numerosSegmentos(valor);
                                 break;
                             case 1:
                                 System.out.println(valor);
                                 break;
                             case 2:
-                                System.out.println(valor);
+                                velocimetro(valor);
                                 break;
                             case 3:
-                                if("1".equals(valor))
-                                    jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bton.png")));
-                                else
-                                    jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/btoff.png")));
+                                jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bt" + valor + ".png")));
                                 break;
                             case 4:
-                                if("1".equals(valor))
-                                    jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bton.png")));
-                                else
-                                    jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/btoff.png")));
+                                jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bt" + valor + ".png")));
                                 break;
                             case 5:
-                                if("1".equals(valor))
-                                    jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bton.png")));
-                                else
-                                    jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/btoff.png")));
+                                jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bt" + valor + ".png")));
                                 break;
                             case 6:
-                                if("1".equals(valor))
-                                    jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bton.png")));
-                                else
-                                    jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/btoff.png")));
+                                jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bt" + valor + ".png")));
                                 break;
                         }
                         Bandera++;

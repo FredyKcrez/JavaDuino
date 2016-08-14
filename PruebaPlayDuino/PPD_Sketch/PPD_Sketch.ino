@@ -27,9 +27,8 @@
  * Variables
  */
 int lect = 0;
-int pot1 = 0;
-int pot2 = 0;
-int pot3 = 0;
+int pot = 0;
+String cadena = "";
 
 /*
  * MUX3  MUX2  MUX1  MUX0  Analog Pin
@@ -63,8 +62,6 @@ void setup() {
 }
 
 void loop() {
-  String cadena = "";
-
   /*
    * Sección de los leds del PlayDuino
    * Recibe de la intefaz de Java los estados de los botones
@@ -86,68 +83,45 @@ void loop() {
     else if(lect == '6')
       digitalWrite(white, HIGH);
     else if(lect == '7')
-      digitalWrite(white, LOW);  
+      digitalWrite(white, LOW);
   }
 
   /*
    * Sección de los potenciometros
    * Envia los valores leidos de cada potenciometro a la interfaz Java
    */
-  //Ponemos el analogico 3 como primera lectura
-  pinAnalogoLectura(1,1,0,0);
-  pot1 = analogReadFast();
-  delay(100);
+  pinAnalogoLectura(1,1,0,0); //Ponemos el analogico 3 como primera lectura
+  pinAnalogoLectura(0,0,1,0); //Ponemos el analogico 4 como primera lectura
+  pinAnalogoLectura(1,0,1,0); //Ponemos el analogico 5 como primera lectura
   
-  //Ponemos el analogico 4 como primera lectura
-  pinAnalogoLectura(0,0,1,0);
-  pot2 = analogReadFast();
-  delay(100);
-  
-  //Ponemos el analogico 5 como primera lectura
-  pinAnalogoLectura(1,0,1,0);
-  pot3 = analogReadFast();
-  delay(100);
-
-  cadena = (String) pot1 + "," + (String) pot2 + "," + (String) pot3;
-
   /*
    * Seccón de los botones
    * Envia los estados de cada boton a la interfaz Java
    */
-   if (digitalRead(btn1) == HIGH) {
-    cadena += ",0";
-   } else {
-    cadena += ",1";
-   }
-
-   delay(100);
-   if (digitalRead(btn2) == HIGH) {
-    cadena += ",0";
-   } else {
-    cadena += ",1";
-   }
-
-   delay(100);
-   if (digitalRead(btn3) == HIGH) {
-    cadena += ",0";
-   } else {
-    cadena += ",1";
-   }
-
-   delay(100);
-   if (digitalRead(btn4) == HIGH) {
-    cadena += ",0";
-   } else {
-    cadena += ",1";
-   }
-
+   aCad(btn1);
+   aCad(btn2);
+   aCad(btn3);
+   aCad(btn4);
    Serial.println(cadena);
+   cadena = "";
+}
+
+void aCad(int btn) {
+   if (digitalRead(btn) == HIGH) {
+    cadena += "off,";
+   } else {
+    cadena += "on,";
+   }
+   delay(100);
 }
 
 void pinAnalogoLectura(int m0, int m1, int m2, int m3) {
   // Definiendo el puerto analogico A5 como el puerto de lectura de datos
   // Leer en el enlace para mayor referencia
   ADMUX=(1<<ADLAR)|(0<<REFS1)|(1<<REFS0)|(m3<<MUX3)|(m2<<MUX2)|(m1<<MUX1)|(m0<<MUX0);
+  pot = analogReadFast();
+  cadena += (String) pot + ",";
+  delay(100);
 }
 
 /*
